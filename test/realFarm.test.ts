@@ -14,7 +14,7 @@ describe("realFarm", () => {
     let realToken: Contract;
     let mockDai: Contract;
 
-    const daiAmount: BigNumber = ethers.utils.parseEther('25000');
+    const daiAmount: BigNumber = ethers.utils.parseEther('200');
 
     beforeEach(async() => {
         const RealFarm = await ethers.getContractFactory('RealFarm');
@@ -38,6 +38,21 @@ describe("realFarm", () => {
             expect(realToken).to.be.ok
             expect(mockDai).to.be.ok
             expect(realFarm).to.be.ok
+        })
+    })
+
+    describe("Stake", async() => {
+        it("shoud accept DAI and update mapping", async() => {
+            let toTransfer: BigNumber = ethers.utils.parseEther("100");
+            await mockDai.connect(alice).approve(realFarm.address, toTransfer);
+
+            expect(await realFarm.isStaking(alice.address)).to.eq(false)
+
+            expect(await realFarm.connect(alice).stake(toTransfer)).to.be.ok
+
+            expect(await realFarm.daiTokenBalance(alice.address)).to.deep.equal(toTransfer);
+
+            expect(await realFarm.isStaking(alice.address)).to.eq(true)
         })
     })
 })
