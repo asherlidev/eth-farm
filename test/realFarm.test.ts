@@ -32,4 +32,12 @@ describe("realFarm", () => {
         realToken = await RealToken.deploy();
         realFarm = await RealFarm.deploy(mockDai.address, realToken.address);
     })
+
+    describe("Init", async() => {
+        it("should initialize", async() => {
+            expect(realToken).to.be.ok
+            expect(realFarm).to.be.ok
+            expect(mockDai).to.be.ok
+        })
+    })
 })
