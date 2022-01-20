@@ -4,7 +4,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract MockERC20 is ERC20, Ownable {
-    constructor(uint256 initialSupply) ERC20("Real", "RLT") {
+    constructor(uint256 initialSupply) ERC20("MockDai", "mDai") {
         _mint(msg.sender, initialSupply);
     }
 
