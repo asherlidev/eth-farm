@@ -21,7 +21,7 @@ describe("realFarm", () => {
         const RealToken = await ethers.getContractFactory('RealToken');
         const MockDai = await ethers.getContractFactory('MockERC20');
     
-        mockDai = await MockDai.deploy("MockDai", 'mDai');
+        mockDai = await MockDai.deploy(100000000);
         [owner, alice, bob] = await ethers.getSigners();
         await Promise.all([
             mockDai.mint(owner.address, daiAmount),
@@ -29,15 +29,15 @@ describe("realFarm", () => {
             mockDai.mint(bob.address, daiAmount)
         ]);
 
-        realToken = await RealToken.deploy();
+        realToken = await RealToken.deploy(25000000);
         realFarm = await RealFarm.deploy(mockDai.address, realToken.address);
     })
 
     describe("Init", async() => {
         it("should initialize", async() => {
             expect(realToken).to.be.ok
-            expect(realFarm).to.be.ok
             expect(mockDai).to.be.ok
+            expect(realFarm).to.be.ok
         })
     })
 })
