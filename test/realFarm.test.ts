@@ -74,4 +74,24 @@ describe("realFarm", () => {
             await expect(realFarm.connect(bob).stake(toTransfer)).to.be.revertedWith('Your balance is less that the amount you want to stake')
         })
     })
+
+    describe("Unstake", async() => {
+        beforeEach(async() => {
+            let toTransfer = ethers.utils.parseEther("100")
+            await mockDai.connect(alice).approve(realFarm.address, toTransfer)
+            await realFarm.connect(alice).stake(toTransfer)
+        })
+
+        it("should unstake balance from user", async() => {
+            let toTransfer = ethers.utils.parseEther("100")
+            await realFarm.connect(alice).unstake(toTransfer)
+
+            res = await realFarm.daiTokenBalance(alice.address)
+            expect(Number(res))
+                .to.eq(0)
+
+            expect(await realFarm.isStaking(alice.address))
+                .to.eq(false)
+        })
+    })
 })
