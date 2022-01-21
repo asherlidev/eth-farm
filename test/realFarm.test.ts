@@ -1,8 +1,10 @@
-import { expect } from "chai";
+import { expect, use } from "chai";
 import { ethers } from "hardhat";
 import { Contract, BigNumber } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { solidity } from 'ethereum-waffle';
 // import { time } from "@openzeppelin/test-helpers";
+use(solidity);
 
 
 describe("realFarm", () => {
@@ -53,6 +55,23 @@ describe("realFarm", () => {
             expect(await realFarm.daiTokenBalance(alice.address)).to.deep.equal(toTransfer);
 
             expect(await realFarm.isStaking(alice.address)).to.eq(true)
+        })
+
+        it("should update balance with muliple stakes", async () => {
+            let toTransfer = ethers.utils.parseEther("100");
+            await mockDai.connect(alice).approve(realFarm.address, toTransfer);
+            await realFarm.connect(alice).stake(toTransfer);
+
+            await mockDai.connect(alice).approve(realFarm.address, toTransfer);
+            await realFarm.connect(alice).stake(toTransfer);
+
+            expect(await realFarm.daiTokenBalance(alice.address)).to.deep.equal(ethers.utils.parseEther("200"));
+        })
+
+        it("should revert with not enough funds", async () => {
+            let toTransfer = ethers.utils.parseEther("100000");
+            await mockDai.connect(bob).approve(realFarm.address, toTransfer);
+            await expect(realFarm.connect(bob).stake(toTransfer)).to.be.revertedWith('Your balance is less that the amount you want to stake')
         })
     })
 })
