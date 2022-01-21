@@ -18,9 +18,9 @@ async function main() {
   // We get the contract to deploy
   const [deployer] = await ethers.getSigners();
 
-  const MockDai = await ethers.getContractFactory('MockERC20');
-  const mockDai = await MockDai.deploy(1000000);
-  console.log('mockDai address: ' + mockDai.address);
+  // const MockDai = await ethers.getContractFactory('MockERC20');
+  // const mockDai = await MockDai.deploy(1000000);
+  // console.log('mockDai address: ' + mockDai.address);
 
   const RealToken = await ethers.getContractFactory("RealToken");
   const realToken = await RealToken.deploy(1000000);
