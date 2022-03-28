@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 import { Contract, BigNumber } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { solidity } from "ethereum-waffle";
-// import { time } from "@openzeppelin/test-helpers";
+import { time } from "@openzeppelin/test-helpers";
 use(solidity);
 
 describe("realFarm", () => {
@@ -100,21 +100,22 @@ describe("realFarm", () => {
 
   describe("WithdrawYield", async () => {
     beforeEach(async () => {
-      await realToken._transferOwnership(realFarm.address);
+      await realToken.transferOwnership(realFarm.address);
       let toTransfer = ethers.utils.parseEther("10");
       await mockDai.connect(alice).approve(realFarm.address, toTransfer);
       await realFarm.connect(alice).stake(toTransfer);
     });
 
-    // it("should return correct yield time", async () => {
-    //   let timeStart = await realFarm.startTime(alice.address);
-    //   expect(Number(timeStart)).to.be.greaterThan(0);
+    it("should return correct yield time", async () => {
+      let timeStart = await realFarm.startTime(alice.address);
+      expect(Number(timeStart)).to.be.greaterThan(0);
 
-    //   // Fast-forward time
-    //   await time.increase(86400);
+      // Fast-forward time
+      await time.increase(86400);
+      console.log(await realFarm.calculateYieldTime(alice.address), 'time')
 
-    //   expect(await realFarm.calculateYieldTime(alice.address)).to.eq(86400);
-    // });
+      expect(await realFarm.calculateYieldTime(alice.address)).to.eq(86400);
+    });
 
     // it("should mint correct token amount in total supply and user", async () => {
     //   await time.increase(86400);
